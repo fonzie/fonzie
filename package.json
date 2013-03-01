@@ -1,0 +1,44 @@
+{
+  "name": "fonzie",
+  "version": "0.0.0",
+  "description": "Sass package manager",
+  "main": "index.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "nopt": "*",
+    "request": "*",
+    "semver": "*",
+    "component": "*",
+    "commander": "1.0.5",
+    "mkdirp": "0.3.4",
+    "win-fork": "1.0.0",
+    "superagent": "*",
+    "batch": "*"
+  },
+  "devDependencies": {
+    "debug": "*"
+  },
+  "scripts": {
+    "test": "make test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/anthonyshort/fonzie"
+  },
+  "keywords": [
+    "sass",
+    "package",
+    "cli"
+  ],
+  "bin": {
+    "fonzie": "bin/fonzie",
+    "fonzie-build": "bin/fonzie-build",
+    "fonzie-install": "bin/fonzie-install",
+    "fonzie-search": "bin/fonzie-search",
+    "fonzie-publish": "bin/fonzie-publish"
+  },
+  "author": "Anthony Short",
+  "license": "BSD"
+}

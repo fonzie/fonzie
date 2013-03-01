@@ -1,0 +1,39 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var fonzie = require('..');
+var path = require('path');
+var fs = require('fs');
+var exists = fs.existsSync || path.existsSync;
+var mkdir = require('mkdirp');
+
+// Options 
+
+program
+  .option('-o, --out <dir>', 'output directory defaulting to ./build', 'build')
+  .option('-v, --verbose', 'output verbose build information')
+
+// examples
+
+program.on('--help', function(){
+  console.log('  Examples:');
+  console.log();
+  console.log('    # build to ./build');
+  console.log('    $ fonzie build');
+  console.log();
+  console.log('    # build to ./dist as screen.css');
+  console.log('    $ fonzie build -o dist/screen.css');
+  console.log();
+});
+
+// parse argv
+
+program.parse(process.argv);
+
+// Load json
+
+var conf = require(path.resolve('component.json'));
+
+// mkdir -p
+
+mkdir.sync(program.out);

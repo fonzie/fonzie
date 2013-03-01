@@ -1,0 +1,64 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander')
+  , spawn = require('win-fork')
+  , path = require('path')
+  , fs = require('fs')
+  , join = path.join
+  , exists = fs.existsSync;
+
+// usage
+
+program
+  .version(require('../package').version)
+  .usage('<command> [options]');
+
+// sub-command help
+
+program.on('--help', function(){
+  console.log('  Commands:');
+  console.log();
+  console.log('    install [name ...]      install one or more packages');
+  console.log('    search [query]          search for packages');
+  console.log('    build                   build the package');
+  console.log('    ls                      list installed components');
+  console.log();
+  process.exit();
+});
+
+// parse argv
+
+program.parse(process.argv);
+
+// args void of cmd
+
+var args = process.argv.slice(3);
+
+// command
+
+var cmd = program.args[0];
+
+// display help
+
+if (!cmd) {
+  process.stdout.write(program.helpInformation());
+  program.emit('--help');
+  process.exit();
+}
+
+// executable
+
+var bin = 'fonzie-' + cmd;
+
+// local
+
+var local = join(__dirname, bin);
+if (exists(local)) bin = local;
+
+// spawn
+
+var proc = spawn(bin, args, { stdio: 'inherit', customFds: [0, 1, 2] });

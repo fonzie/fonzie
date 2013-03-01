@@ -1,0 +1,189 @@
+#!/usr/bin/env node
+
+var program   = require('commander');
+var fonzie    = require('../lib/fonzie');
+var utils     = require('../lib/utils');
+var path      = require('path');
+var resolve   = path.resolve;
+var fs        = require('fs');
+var join      = path.join;
+var exists    = fs.existsSync;
+var debug     = require('debug')('install');
+var log       = utils.log;
+
+program.on('--help', function(){
+  console.log('  Examples:');
+  console.log();
+  console.log('    # install all dependencies');
+  console.log('    $ fonzie install');
+  console.log();
+  console.log('    # install a package');
+  console.log('    $ fonzie install easing');
+  console.log();
+  console.log('    # fonzie several dependencies');
+  console.log('    $ fonzie install easing clearfix');
+  console.log();
+  console.log('    # install a specific tag / sha');
+  console.log('    $ fonzie install clearfix@0.1.0');
+  console.log();
+  console.log('    # install regular & development deps in .');
+  console.log('    $ fonzie install -d');
+  console.log();
+});
+
+program
+  .usage('<name ...>')
+  .option('-d, --dev', 'Install development dependencies')
+  .option('-o, --out <dir>', 'output packages to the given <dir>')
+  .option('-f, --force', 'Force fetching remote resources even if a local copy exists on disk', parseFloat)
+  .parse(process.argv);
+
+// List of package names
+var pkgs = program.args;
+
+// install from ./component.json
+var local = 0 == pkgs.length;
+
+// The component.json file
+var conf = loadConfig();
+
+// install from ./component.json
+if (local) {
+  if (conf.dependencies) {
+    pkgs = normalize(conf.dependencies);
+  }
+  if (conf.development && program.dev) {
+    pkgs = pkgs.concat(normalize(conf.development));
+  }
+}
+
+if (!local) {
+  conf.dependencies = conf.dependencies || {};
+  pkgs.forEach(function(pkg){
+    pkg = parsePackage(pkg);
+    conf.dependencies[pkg.name] = pkg.version || '*';
+  });
+  saveConfig();
+}
+
+// install
+console.log();
+pkgs.forEach(function(pkg){
+  pkg = parsePackage(pkg);
+  install(pkg.name, pkg.version || 'master');
+});
+
+// parse package identifier
+
+function parsePackage(pkg) {
+  var parts = pkg.split('@');
+  return {
+    name: parts.shift(),
+    version: parts.shift()
+  };
+}
+
+// map deps to args
+
+function normalize(deps) {
+  return Object.keys(deps).map(function(name){
+    return name + '@' + deps[name];
+  });
+}
+
+// reporter
+
+function report(pkg, options) {
+  options = options || {};
+  if (pkg.inFlight) return;
+  log('install', pkg.name + '@' + pkg.version);
+
+  pkg.on('error', function(err){
+    if (404 != err.status) utils.fatal(err.stack);
+
+    if (err.fatal) {
+      error(err.message);
+      process.exit(1);
+    }
+  });
+
+  pkg.on('dep', function(dep){
+    log('dep', dep.name + '@' + dep.version);
+    report(dep, options);
+  });
+
+  pkg.on('exists', function(dep){
+    log('exists', dep.name + '@' + dep.version);
+  });
+
+  pkg.on('file', function(file){
+    log('fetch', pkg.name + ':' + file);
+  });
+
+  pkg.on('end', function(){
+    log('complete', pkg.name);
+  });
+}
+
+// padding
+
+process.on('exit', function(){
+  console.log();
+});
+
+/**
+ * Install package `name` at the given `version`
+ * from all specified remotes.
+ *
+ * @param {String} name
+ * @param {String} version
+ * @api private
+ */
+
+function install(name, version) {
+  fonzie.getPackageData(name, function(err, data){
+    if(err) utils.fatal(err.message);
+
+    debug('Fetched data for ' + name);
+
+    // kick off installation
+    var pkg = fonzie.install(data, version, {
+      dest: program.out,
+      force: program.force,
+      dev: program.dev,
+      remotes: conf.remotes
+    });
+
+    report(pkg);
+
+    // TODO: add callback
+    pkg.install();
+  });
+}
+
+/**
+ * Read / create ./component.json.
+ *
+ * @return {Object}
+ * @api private
+ */
+
+function loadConfig() {
+  var path = resolve('component.json');
+  if (exists('component.json')) {
+    return require(path);
+  } else {
+    return {};
+  }
+}
+
+/**
+ * Save configuration.
+ *
+ * @api private
+ */
+
+function saveConfig() {
+  var path = resolve('component.json');
+  fs.writeFileSync(path, JSON.stringify(conf, null, 2));
+}
