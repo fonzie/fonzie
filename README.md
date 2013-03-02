@@ -1,10 +1,39 @@
-# fonzie: The package manager for Sass
+# Fonzie: The package manager for Sass
 
-fonzie is a package manager built on top of Bower-server and inspired by Component(1). After trying 
-to use both Bower and Component to manage Sass dependencies, I realised that nothing really fit
+Fonzie is a package manager built on top of Bower-server and inspired by Component(1). In fact, you can
+use Component(1) packages with Fonzie. 
+
+After trying to use both Bower and Component to manage Sass dependencies, I realised that nothing really fit
 into a Sass workflow.
 
-With fonzie you can install Sass packages, search for them and build your Sass projects similar to Component.
+With fonzie you can **install Sass packages, search for them in a registry and build your project** and all of
+the load paths and file requires are done for you.
+
+Installing packages is easy:
+
+```
+fonzie install breakpoints normalize button
+```
+
+Fonzie doesn't handle any of the Sass imports. So you can import just what you need:
+
+```scss
+@import "normalize"
+@import "button"
+@import "breakpoints"
+
+@include mobile {
+  color: red;
+}
+```
+
+Then build your Sass:
+
+```
+fonzie build
+```
+
+`fonzie-build` is a wrapper around Sass so it will take care of all the load paths.
 
 ## Installation
 
@@ -55,3 +84,8 @@ fonzie search grid
 ```
 
 And be shown a list of packages available.
+
+## Packages
+
+## Adding Custom Sass Functions
+

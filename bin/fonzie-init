@@ -71,7 +71,7 @@ program.prompt(prompt, function(obj){
   conf.repo = obj.repo;
   conf.description = obj.desc;
   conf.author = obj.author;
-  conf.main = 'index.scss';
+  conf.main = obj.name + '.scss';
   conf.version = "0.0.1";
   conf.dependencies = {};
   conf.license = "MIT";
