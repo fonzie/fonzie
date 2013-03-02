@@ -1,8 +1,0 @@
-  fonzie register anthonyshort/stitch-grid
-
-This would mean that the server really just stores a list of github repos
-that have registered to be packages. It could stored the JSON of the component
-on the server so it could return the name, description, author quicker. This
-would mean the server would need some way of refreshing a package.
-
-By calling register on the package again it will re-sync the package. 
