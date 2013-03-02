@@ -1,7 +1,7 @@
 {
   "name": "fonzie",
-  "version": "0.0.0",
-  "description": "Sass package manager",
+  "version": "0.0.1",
+  "description": "Secrets",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -17,7 +17,9 @@
     "superagent": "*",
     "batch": "*",
     "unzip": "~0.1.4",
-    "fstream": "~0.1.22"
+    "fstream": "~0.1.22",
+    "exec": "0.0.5",
+    "walk": "~2.2.1"
   },
   "devDependencies": {
     "debug": "*"

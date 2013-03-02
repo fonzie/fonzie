@@ -2,15 +2,21 @@
 
 var program = require('commander');
 var fonzie = require('..');
+var build = require('../lib/builder');
+var utils = require('../lib/utils');
 var path = require('path');
 var fs = require('fs');
 var exists = fs.existsSync || path.existsSync;
 var mkdir = require('mkdirp');
+var debug = require('debug')('fonzie:build');
+var exec = require('child_process').exec;
 
 // Options 
 
 program
   .option('-o, --out <dir>', 'output directory defaulting to ./build', 'build')
+  .option('-s, --style <type>', 'Output style. Can be nested (default), compact, compressed, or expanded.')
+  .option('-l, --line-numbers', 'Emit comments in the generated CSS indicating the corresponding source line.')
   .option('-v, --verbose', 'output verbose build information')
 
 // examples
@@ -34,6 +40,46 @@ program.parse(process.argv);
 
 var conf = require(path.resolve('component.json'));
 
-// mkdir -p
+// Add component lookup paths
+var lookupPaths = ['components'];
+if(conf.paths) {
+  lookupPaths.concat(conf.paths);
+}
 
+// mkdir -p
 mkdir.sync(program.out);
+
+// Build it
+var builder = build(lookupPaths);
+
+// When we've built up all the arguments
+builder.on('end', function(args){
+  var target = program.args[0] || conf.main || 'index.scss';
+  var output = program.args[1] || 'build/build.css';
+
+  if( program.style ) {
+    args.push(['--style', program.style]);
+  }
+
+  if(program['line-numbers']) {
+    args.push(['--line-numbers']);
+  }
+
+  args.unshift(['sass']);
+  args.push([target]);
+  args.push([output]);
+
+  var command = args.map(function(arg){
+    return arg.join(' ');
+  }).join(' ');
+  
+  debug(command);
+
+  // sass --require eachfile --load-path blah --style nested --force --line-numbers [input] [output]
+  var child = exec(command, function(err, out) {
+    if (err) utils.error(err);
+    process.exit();
+  });
+
+});
+
