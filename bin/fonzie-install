@@ -10,6 +10,7 @@ var join      = path.join;
 var exists    = fs.existsSync;
 var debug     = require('debug')('install');
 var log       = utils.log;
+var error     = utils.error;
 
 program.on('--help', function(){
   console.log('  Examples:');
@@ -155,9 +156,7 @@ function install(name, version) {
     });
 
     report(pkg);
-
-    // TODO: add callback
-    pkg.install();
+      pkg.install();
   });
 }
 

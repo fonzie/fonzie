@@ -15,7 +15,9 @@
     "mkdirp": "0.3.4",
     "win-fork": "1.0.0",
     "superagent": "*",
-    "batch": "*"
+    "batch": "*",
+    "unzip": "~0.1.4",
+    "fstream": "~0.1.22"
   },
   "devDependencies": {
     "debug": "*"
