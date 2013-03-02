@@ -1,7 +1,7 @@
 {
   "name": "fonzie",
   "version": "0.0.2",
-  "description": "Secrets",
+  "description": "Package manager for Sass",
   "main": "index.js",
   "directories": {
     "test": "test"
@@ -13,12 +13,10 @@
     "mkdirp": "0.3.4",
     "superagent": "*",
     "batch": "*",
-    "walk": "~2.2.1",
-    "debug": "*"
+    "debug": "*",
+    "walkdir": "0.0.5"
   },
-  "scripts": {
-    "test": "make test"
-  },
+  "scripts": {},
   "repository": {
     "type": "git",
     "url": "http://github.com/anthonyshort/fonzie"

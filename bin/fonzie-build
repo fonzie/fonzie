@@ -2,8 +2,9 @@
 
 var program = require('commander');
 var fonzie = require('..');
-var build = require('../lib/builder');
+var Builder = require('../lib/builder');
 var utils = require('../lib/utils');
+var log = utils.log;
 var path = require('path');
 var fs = require('fs');
 var exists = fs.existsSync || path.existsSync;
@@ -43,17 +44,22 @@ var conf = require(path.resolve('component.json'));
 // Add component lookup paths
 var lookupPaths = ['components'];
 if(conf.paths) {
-  lookupPaths.concat(conf.paths);
+  lookupPaths = lookupPaths.concat(conf.paths);
 }
+
+debug('Look up paths: %s', lookupPaths);
 
 // mkdir -p
 mkdir.sync(program.out);
+console.log();
 
 // Build it
-var builder = build(lookupPaths);
+var builder = new Builder({
+  paths: lookupPaths
+});
 
 // When we've built up all the arguments
-builder.on('end', function(args){
+builder.on('end', function(args){  
   var target = program.args[0] || conf.main || 'index.scss';
   var output = program.args[1] || 'build/build.css';
 
@@ -78,8 +84,10 @@ builder.on('end', function(args){
   // sass --require eachfile --load-path blah --style nested --force --line-numbers [input] [output]
   var child = exec(command, function(err, out) {
     if (err) utils.error(err);
+    log('Output', output);
     process.exit();
   });
 
 });
 
+builder.build();

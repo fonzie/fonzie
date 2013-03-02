@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 
 var program   = require('commander');
-var fonzie    = require('../lib/fonzie');
 var utils     = require('../lib/utils');
+var Package   = require('../lib/package');
+var registry  = require('../lib/registry');
 var path      = require('path');
 var resolve   = path.resolve;
 var fs        = require('fs');
@@ -126,8 +127,6 @@ function report(pkg, options) {
   });
 }
 
-// padding
-
 process.on('exit', function(){
   console.log();
 });
@@ -142,13 +141,12 @@ process.on('exit', function(){
  */
 
 function install(name, version) {
-  fonzie.getPackageData(name, function(err, data){
+  registry.get(name, function(err, data){
     if(err) utils.fatal(err.message);
 
     debug('Fetched data for ' + name);
 
-    // kick off installation
-    var pkg = fonzie.install(data, version, {
+    var pkg = new Package(data, version, {
       dest: program.out,
       force: program.force,
       dev: program.dev,
@@ -156,7 +154,7 @@ function install(name, version) {
     });
 
     report(pkg);
-      pkg.install();
+    pkg.install();
   });
 }
 
