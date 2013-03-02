@@ -1,0 +1,113 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var program = require('commander')
+  , component = require('..')
+  , utils = require('../lib/utils')
+  , path = require('path')
+  , fs = require('fs')
+  , join = path.join
+  , read = fs.readFileSync
+  , readdir = fs.readdirSync
+  , exists = fs.existsSync
+  , mkdir = require('mkdirp').sync;
+
+// usage
+
+program.usage('[dir]');
+
+// options
+
+program
+  .parse(process.argv);
+
+// config
+
+var conf = {};
+
+// dest
+
+var dir = program.args[0] || '.';
+
+// --local
+
+var local = program.local;
+
+// already a component
+
+if (exists(join(dir, 'component.json'))) {
+  utils.fatal(dir + ' is already a package');
+}
+
+/**
+ * Verbose write.
+ */
+
+function write(path, str) {
+  if (exists(path)) {
+    utils.warn('exists', path);
+  } else {
+    utils.log('create', path);
+    fs.writeFileSync(path, str);
+  }
+}
+
+// private / public prompts
+
+var prompt = {
+  name: 'name: ',
+  repo: 'repo (username/project): ',
+  desc: 'description: ',
+  author: 'author: '
+};
+
+// prompt
+
+program.prompt(prompt, function(obj){
+  conf.name = obj.name;
+  conf.repo = obj.repo;
+  conf.description = obj.desc;
+  conf.author = obj.author;
+  conf.main = 'index.scss';
+  conf.version = "0.0.1";
+  conf.dependencies = {};
+  conf.license = "MIT";
+
+  if(conf.name.match(/^[a-zA-Z0-9\-_]+$/).length !== 1) {
+    utils.error('Package name can only contain letters, numbers, underscores and dashes');
+    process.exit(0);
+  }
+
+  if(conf.repo.indexOf('/') === -1) {
+    utils.error('Github repo must be in the format username/project');
+    process.exit(0);
+  }
+
+  // dir
+  console.log();
+  utils.log('create', dir);
+  mkdir(dir);
+
+  // Create main file
+  write(join(dir, obj.name + '.scss'), '');
+
+  // .gitignore
+  write(join(dir, '.gitignore'), 'components\nbuild\n');
+
+  // write component.json
+  write(join(dir, 'component.json'), JSON.stringify(conf, null, 2));
+
+  console.log();
+  process.exit();
+});
+
+/**
+ * Boolean from `str`.
+ */
+
+function bool(str) {
+  return /^y(es)?/i.test(str);
+}

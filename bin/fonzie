@@ -23,9 +23,9 @@ program.on('--help', function(){
   console.log('  Commands:');
   console.log();
   console.log('    install [name ...]      install one or more packages');
-  console.log('    search [query]          search for packages');
+  console.log('    search [query]          search for packages. No query to see all packages');
   console.log('    build                   build the package');
-  console.log('    ls                      list installed components');
+  console.log('    publish                 Add package to the public registry');
   console.log();
   process.exit();
 });

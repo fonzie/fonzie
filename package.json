@@ -1,6 +1,6 @@
 {
   "name": "fonzie",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Package manager for Sass",
   "main": "index.js",
   "directories": {
@@ -28,6 +28,7 @@
   ],
   "bin": {
     "fonzie": "bin/fonzie",
+    "fonzie-init": "bin/fonzie-init",
     "fonzie-build": "bin/fonzie-build",
     "fonzie-install": "bin/fonzie-install",
     "fonzie-search": "bin/fonzie-search",
