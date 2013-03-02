@@ -1,27 +1,19 @@
 {
   "name": "fonzie",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Secrets",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "nopt": "*",
+    "win-fork": "*",
     "request": "*",
-    "semver": "*",
-    "component": "*",
     "commander": "1.0.5",
     "mkdirp": "0.3.4",
-    "win-fork": "1.0.0",
     "superagent": "*",
     "batch": "*",
-    "unzip": "~0.1.4",
-    "fstream": "~0.1.22",
-    "exec": "0.0.5",
-    "walk": "~2.2.1"
-  },
-  "devDependencies": {
+    "walk": "~2.2.1",
     "debug": "*"
   },
   "scripts": {
