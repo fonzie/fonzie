@@ -152,9 +152,33 @@ And be shown a list of packages available.
 
 ## Publishing Packages
 
-Publishing new packages to the registry is easy.
+Publishing new packages to the registry is easy. It uses your `component.json` file to publish kind of like npm. Just
+run this in your package directory:
 
-## Packages
+```
+fonzie publish
+```
+
+If you've created your `component.json` using `fonzie init` you shouldn't have any problems. Like Bower, packages can't
+be removed from the registry and can't be edited. I'm looking at various ways to manage this using Github.
+
 
 ## Adding Custom Sass Functions
+
+You can also require custom Ruby scripts just like you can with the Sass command line tool. This works the same way
+as 
+
+```
+sass -r /path/to/file.rb
+```
+
+And allows you to [http://sass-lang.com/docs/yardoc/Sass/Script/Functions.html](write custom Sass functionality). Just
+add a `ruby` section to your `component.json` and add an array of files you want required:
+
+```
+{
+  "name": "component-name",
+  "ruby": ["lib/something.rb"]
+}
+```
 
