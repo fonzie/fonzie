@@ -9,7 +9,8 @@ need to clear the registry** if I need to make any large changes. Please give me
 ---
 
 Fonzie is a package manager built on top of Bower-server and Component(1). It allows you to easily install
-Sass packages into your project and then build it.
+Sass packages into your project and then build it. Unlike Component, Fonzie uses a registry but these still
+map to Github projects.
 
 With Fonzie you can **install Sass packages, search for them in a registry and build your project** and all of
 the load paths and file requires are done for you.
