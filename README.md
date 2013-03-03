@@ -81,7 +81,7 @@ will look something like this:
 
 ```
 
-For a detail explanation of all of the fields, set the [https://github.com/component/component/wiki/Spec](Component wiki).
+For a detailed explanation of all of the fields, set the [https://github.com/component/component/wiki/Spec](Component wiki).
 The important parts for us are the `files` and `dependencies` sections. Every file that you need for you component
 to work needs to be in the `files` array otherwise it won't be pulled down when someone installs your package.
 
@@ -91,7 +91,7 @@ Lets install a package into our project:
 fonzie install clear-floats
 ```
 
-This will install the `clearfix` package into your `components` director and add it as a dependency in your `component.json`.
+This will install the `clear-floats` package into your `components` director and add it as a dependency in your `component.json`.
 
 Now import that into your main file (the main file you would normally build with Sass):
 
