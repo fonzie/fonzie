@@ -6,6 +6,14 @@ Sass packages into your project and then build it.
 With Fonzie you can **install Sass packages, search for them in a registry and build your project** and all of
 the load paths and file requires are done for you.
 
+## Installation
+
+```
+npm install -g fonzie
+```
+
+You'll also need to have the Sass gem installed.
+
 ## Overview
 
 **Fonzie controls your Sass projects.** You build your Sass with it and you install packages. This means you don't
@@ -43,12 +51,6 @@ package you just need to do
 ```
 
 And it will work no matter where you are.
-
-## Installation
-
-```
-npm install -g fonzie
-```
 
 ### Commands
 
