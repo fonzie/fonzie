@@ -19,17 +19,12 @@ var program = require('commander')
 
 program
   .usage('[dir]')
-  .option('-s, --skeleton', 'create a package skeleton')
   .option('-p, --private', 'create a private component')
 
 // options
 
 program
   .parse(process.argv);
-
-// config
-
-var conf = {};
 
 // dest
 
@@ -58,66 +53,121 @@ function write(path, str) {
   }
 }
 
-// private / public prompts
+/**
+ * This will become our component.json
+ */
 
-var prompt = {
-  name: 'name: ',
-  repo: 'repo (username/project): ',
-  desc: 'description: ',
-  author: 'author: '
+var conf = {
+  name: "",
+  repo: "",
+  version: "0.0.1",
+  author: "",
+  description: "",
+  main: "",
+  remotes: [ "http://fonzie.herokuapp.com/packages" ],
+  files: [],
+  license: ""
 };
 
-// prompt
+/**
+ * private / public prompts
+ */
 
-program.prompt(prompt, function(obj){
-  conf.name = obj.name;
+console.log();
 
-  if( program.private ) {
-    conf.private = true;
-  }
+if( program.private ) {
+  createPrivateComponent();
+}
+else {
+  createPublicComponent();
+}
 
-  conf.repo = obj.repo;
-  conf.description = obj.desc;
-  conf.author = obj.author;
-  conf.main = obj.name + '.scss';
-  conf.version = "0.0.1";
-  conf.dependencies = {};
-  conf.remotes = [ "http://fonzie.herokuapp.com/packages" ];
-  conf.files = [ obj.name + '.scss' ];
-  conf.license = "MIT";
+/**
+ * Create a private component with no other
+ * files other than the component.json
+ */
 
+function createPrivateComponent() {
+  conf.private = true;
+  createDirectory();
+  saveConfig();
+  process.exit();
+}
+
+/**
+ * Create a public component that includes
+ * all of the files need to publish a component
+ */
+
+function createPublicComponent() {
+  var prompt = {
+    name: '   name: ',
+    repo: '   repo (username/project): ',
+    desc: '   description: ',
+    author: '   author: '
+  };
+  program.prompt(prompt, function(obj){
+    console.log();
+    conf.name = obj.name;
+    conf.repo = obj.repo;
+    conf.author = obj.author;
+    conf.description = obj.desc;
+    conf.license = "MIT";
+    createDirectory();
+    createSkeleton();
+    saveConfig();    
+    process.exit();
+  });
+}
+
+/**
+ * Write the component.json
+ */
+
+function saveConfig() {
+  validateConfig();
+  write(join(dir, 'component.json'), JSON.stringify(conf, null, 2));
+  console.log();
+}
+
+/**
+ * Make sure the component.json is valid
+ */
+
+function validateConfig() {
+  if(conf.private) return;
   if(conf.name.match(/^[a-zA-Z0-9\-_]+$/).length !== 1) {
     utils.error('Package name can only contain letters, numbers, underscores and dashes');
     process.exit(0);
   }
-
   if(conf.repo.indexOf('/') === -1) {
     utils.error('Github repo must be in the format username/project');
     process.exit(0);
   }
+}
 
-  // dir
+/**
+ * Create the component directory
+ * if it doesn't exist
+ */
+
+function createDirectory() {
   console.log();
   utils.log('create', dir);
   mkdir(dir);
+}
 
-  if( program.skeleton ) {
-    // Create main file
-    write(join(dir, obj.name + '.scss'), '');
+/**
+ * Create the template files
+ */
 
-    // .gitignore
-    write(join(dir, '.gitignore'), 'components\nbuild\n.sass-cache\n');
-
-    // Add README
-    write(join(dir, 'README.md'), '');
-  }
-
-  // write component.json
-  write(join(dir, 'component.json'), JSON.stringify(conf, null, 2));
-
-  console.log();
-  process.exit();
-});
+function createSkeleton() {
+  conf.main = conf.name + '.scss';
+  conf.files = [ conf.name + '.scss' ];
+  write(join(dir, conf.name + '.scss'), '');
+  write(join(dir, '.gitignore'), 'components\nbuild\n.sass-cache\n');
+  write(join(dir, 'README.md'), '');
+}
 
 /**
  * Boolean from `str`.

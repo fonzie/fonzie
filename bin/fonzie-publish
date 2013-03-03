@@ -13,6 +13,13 @@ var prompt = {
 program
   .parse(process.argv);
 
+if( manifest.private === true ) {
+  console.log();
+  utils.error('Cannot publish private components');
+  console.log();
+  process.exit();
+}
+
 console.log();
 program.prompt(prompt, function(obj){
 
