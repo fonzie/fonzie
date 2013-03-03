@@ -23,6 +23,11 @@ npm install -g fonzie
 
 You'll also need to have the Sass gem installed.
 
+## Demo
+
+You can grab the [example project](http://github.com/fonzie/example-project) that has Fonzie setup and ready to go. You
+just need to run `fonzie install` and `fonzie build` to see it in action.
+
 ## Overview
 
 **Fonzie controls your Sass projects.** You build your Sass with it and you install packages. This means you don't
