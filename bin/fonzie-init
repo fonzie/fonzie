@@ -74,6 +74,8 @@ program.prompt(prompt, function(obj){
   conf.main = obj.name + '.scss';
   conf.version = "0.0.1";
   conf.dependencies = {};
+  conf.remotes = [ "http://fonzie.herokuapp.com/packages" ];
+  conf.files = [ obj.name + '.scss' ];
   conf.license = "MIT";
 
   if(conf.name.match(/^[a-zA-Z0-9\-_]+$/).length !== 1) {
@@ -95,7 +97,10 @@ program.prompt(prompt, function(obj){
   write(join(dir, obj.name + '.scss'), '');
 
   // .gitignore
-  write(join(dir, '.gitignore'), 'components\nbuild\n');
+  write(join(dir, '.gitignore'), 'components\nbuild\n.sass-cache\n');
+
+  // Add README
+  write(join(dir, 'README.md'), '');
 
   // write component.json
   write(join(dir, 'component.json'), JSON.stringify(conf, null, 2));
