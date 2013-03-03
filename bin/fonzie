@@ -23,6 +23,7 @@ program.on('--help', function(){
   console.log('  Commands:');
   console.log();
   console.log('    install [name ...]      install one or more packages');
+  console.log('    init                    create a package skeleton');
   console.log('    search [query]          search for packages. No query to see all packages');
   console.log('    build                   build the package');
   console.log('    publish                 Add package to the public registry');
