@@ -1,4 +1,12 @@
-# Fonzie: The Package Manager for Sass
+# Fonzie: The Package Manager for Sass 
+
+---
+
+**Everything is currently in testing** while I work out any bugs and make sure everything works the best
+way possible. When Fonzie reaches a stable version the registry will be locked down, until then, **I might
+need to clear the registry** if I need to make any large changes. Please give me feedback and add issues.
+
+---
 
 Fonzie is a package manager built on top of Bower-server and Component(1). It allows you to easily install
 Sass packages into your project and then build it.
@@ -144,7 +152,7 @@ And be shown a list of packages available.
 
 ## Publishing Packages
 
-
+Publishing new packages to the registry is easy.
 
 ## Packages
 
