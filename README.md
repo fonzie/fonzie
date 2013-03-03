@@ -8,9 +8,9 @@ the load paths and file requires are done for you.
 
 ## Overview
 
-**Fonzie controls your Sass projects. You build your Sass with it and you install packages. This means you don't
+**Fonzie controls your Sass projects.** You build your Sass with it and you install packages. This means you don't
 use tools like Compass or use the Sass gem directly. Instead, you create a `component.json` describing your
-project and using Fonzie to do everything.**
+project and using Fonzie to do everything.
 
 Installing packages is easy:
 
