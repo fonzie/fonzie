@@ -51,7 +51,7 @@ And it will work no matter where you are.
 npm install -g fonzie
 ```
 
-## Commands
+### Commands
 
 Type `fonzie` to see a list of available commands:
 
