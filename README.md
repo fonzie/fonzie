@@ -110,6 +110,7 @@ will look something like this:
   "name": "my-project",
   "version": "0.1.0",
   "main": "index.scss",
+  "remotes": ["http://fonzie.herokuapp.com/packages"],
   "files": ["index.scss"],
   "dependencies": {
 
