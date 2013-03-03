@@ -51,6 +51,28 @@ And it will work no matter where you are.
 npm install -g fonzie
 ```
 
+## Commands
+
+Type `fonzie` to see a list of available commands:
+
+```
+Usage: fonzie <command> [options]
+
+  Options:
+
+    -h, --help     output usage information
+    -V, --version  output the version number
+
+  Commands:
+
+    install [name ...]      install one or more packages
+    init                    create a package skeleton
+    search [query]          search for packages. No query to see all packages
+    build                   build the package
+    publish                 Add package to the public registry
+
+```
+
 ## Getting Started
 
 Fonzie uses the same `component.json` as [component/component](Component) so in theory they are just Component packages. 
