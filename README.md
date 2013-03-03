@@ -188,3 +188,20 @@ add a `ruby` section to your `component.json` and add an array of files you want
 }
 ```
 
+## Local Packages
+
+Like Component, you can also have local packages. These work as if they were installed from the registry, meaning
+that the load paths and ruby files will all be loaded. They are essentially mini-packages that you can make public
+or just use to break up your application.
+
+You'll need to add another load path to your `component.json`
+
+```js
+{ 
+  "name": "foo",
+  "paths": [ "local" ]
+}
+```
+
+This will allow Fonzie to look in local for any packages as well. Each package will need its own `component.json` file.
+
