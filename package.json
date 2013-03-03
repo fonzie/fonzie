@@ -32,7 +32,8 @@
     "fonzie-build": "bin/fonzie-build",
     "fonzie-install": "bin/fonzie-install",
     "fonzie-search": "bin/fonzie-search",
-    "fonzie-publish": "bin/fonzie-publish"
+    "fonzie-publish": "bin/fonzie-publish",
+    "fonzie-skeleton": "bin/fonzie-skeleton"
   },
   "author": "Anthony Short",
   "license": "BSD"

@@ -17,7 +17,10 @@ var program = require('commander')
 
 // usage
 
-program.usage('[dir]');
+program
+  .usage('[dir]')
+  .option('-s, --skeleton', 'create a package skeleton')
+  .option('-p, --private', 'create a private component')
 
 // options
 
@@ -68,6 +71,11 @@ var prompt = {
 
 program.prompt(prompt, function(obj){
   conf.name = obj.name;
+
+  if( program.private ) {
+    conf.private = true;
+  }
+
   conf.repo = obj.repo;
   conf.description = obj.desc;
   conf.author = obj.author;
@@ -93,14 +101,16 @@ program.prompt(prompt, function(obj){
   utils.log('create', dir);
   mkdir(dir);
 
-  // Create main file
-  write(join(dir, obj.name + '.scss'), '');
+  if( program.skeleton ) {
+    // Create main file
+    write(join(dir, obj.name + '.scss'), '');
 
-  // .gitignore
-  write(join(dir, '.gitignore'), 'components\nbuild\n.sass-cache\n');
+    // .gitignore
+    write(join(dir, '.gitignore'), 'components\nbuild\n.sass-cache\n');
 
-  // Add README
-  write(join(dir, 'README.md'), '');
+    // Add README
+    write(join(dir, 'README.md'), '');
+  }
 
   // write component.json
   write(join(dir, 'component.json'), JSON.stringify(conf, null, 2));
