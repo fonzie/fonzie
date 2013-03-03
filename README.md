@@ -3,15 +3,10 @@
 Fonzie is a package manager built on top of Bower-server and Component(1). It allows you to easily install
 Sass packages into your project and then build it.
 
-After trying to use both Bower and Component to manage Sass dependencies, I realised that nothing really fit
-into a Sass workflow. I love the concept of Component, but building Sass projects with it is painful and most
-of the packages cater towards JS. Bower on the other hand has a nice registry for finding packages which leads
-to higher quality projects, however, Bower doesn't have a build tool and wasn't made for Sass.
-
 With Fonzie you can **install Sass packages, search for them in a registry and build your project** and all of
 the load paths and file requires are done for you.
 
-### Overview
+## Overview
 
 **Fonzie controls your Sass projects. You build your Sass with it and you install packages. This means you don't
 use tools like Compass or use the Sass gem directly. Instead, you create a `component.json` describing your
