@@ -1,5 +1,7 @@
 # Fonzie: The Package Manager for Sass 
 
+![Fonzie](http://www.mediabistro.com/fishbowldc/files/2010/12/fonzie_henry_winkler_happy_days.jpg)
+
 ---
 
 **Everything is currently in testing** while I work out any bugs and make sure everything works the best
