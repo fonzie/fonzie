@@ -18,6 +18,7 @@ program
   .option('-o, --out <dir>', 'output directory defaulting to ./build/build.css', 'build/build.css')
   .option('-s, --style <type>', 'Output style. Can be nested (default), compact, compressed, or expanded.')
   .option('-l, --line-numbers', 'Emit comments in the generated CSS indicating the corresponding source line.')
+  .option('-c, --compass', 'Make Compass imports available and load project configuration.')
   .option('-v, --verbose', 'output verbose build information')
 
 // examples
@@ -30,6 +31,9 @@ program.on('--help', function(){
   console.log();
   console.log('    # build to ./dist as screen.css');
   console.log('    $ fonzie build -o dist/screen.css');
+  console.log();
+  console.log('    # build file.scss to ./dist');
+  console.log('    $ fonzie build file.scss -o dist/file.css');
   console.log();
 });
 
@@ -69,6 +73,10 @@ builder.on('end', function(args){
 
   if(program['line-numbers']) {
     args.push(['--line-numbers']);
+  }
+  
+  if(program['compass']) {
+    args.push(['--compass']);
   }
 
   args.unshift(['sass']);
