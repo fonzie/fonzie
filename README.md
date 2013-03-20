@@ -23,7 +23,7 @@ the load paths and file requires are done for you.
 npm install -g fonzie
 ```
 
-You'll also need to have the Sass gem installed.
+You'll also need to have the Sass gem installed. Optionally Compass if you want to use it.
 
 ## Demo
 
@@ -52,7 +52,7 @@ Then import just what you need in your project:
 }
 ```
 
-Then build your Sass:
+Then build your `main` Sass file:
 
 ```
 fonzie build
@@ -89,6 +89,8 @@ Usage: fonzie <command> [options]
     publish                 Add package to the public registry
 
 ```
+
+Be sure to also try `fonzie <command> --help` for more help about a specific command.
 
 ## Getting Started
 
@@ -151,6 +153,18 @@ This will build the file output it into `build/build.css`. You can change this u
 fonzie build -o public/screen.css
 ```
 
+You can also build a specific Sass file just pass it as the first argument of the build command like this
+
+```
+fonzie build main.scss
+```
+
+And combine source and destination
+
+```
+fonzie build main.scss -o public/main.css
+```
+
 Now you can search for new packages too:
 
 ```
@@ -189,6 +203,16 @@ add a `ruby` section to your `component.json` and add an array of files you want
   "name": "component-name",
   "ruby": ["lib/something.rb"]
 }
+```
+
+## Using Compass
+
+If you don't know it yet, Sass have a `--compass` option.
+
+You can path it to `fonzie build`
+
+```
+fonzie build --compass
 ```
 
 ## Local Packages
