@@ -7,7 +7,7 @@ var path      = require('path');
 var manifest  = require(path.resolve('component.json'));
 
 var prompt = {
-  confirm: '  Registering a package will add it registry. Are you sure? '
+  confirm: '  Registering a package will add it to the registry. Are you sure? '
 };
 
 program
