@@ -207,9 +207,7 @@ add a `ruby` section to your `component.json` and add an array of files you want
 
 ## Using Compass
 
-If you don't know it yet, Sass have a `--compass` option.
-
-You can path it to `fonzie build`
+Sass has a `--compass` option that you can path to `fonzie build` using:
 
 ```
 fonzie build --compass
