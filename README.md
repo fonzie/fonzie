@@ -1,5 +1,7 @@
 # Fonzie: Modular Sass Development
 
+<img src="http://www.mediabistro.com/fishbowldc/files/2010/12/fonzie_henry_winkler_happy_days.jpg" style="float:right" />
+
 Fonzie is a Sass package builder built on top of Bower. It allows you to easily install Sass packages into your project and then build it easily. It takes care of all the technical bits so you can focus on writing truly modular Sass.
 
 * Install Sass packages from Bower
