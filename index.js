@@ -1,1 +1,1 @@
-module.exports = require('./lib/fonzie');
+module.exports = require('./lib/builder');

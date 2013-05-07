@@ -1,22 +1,30 @@
 {
   "name": "fonzie",
-  "version": "0.0.6",
-  "description": "Package manager for Sass",
+  "version": "0.1.0",
+  "description": "Install Sass with Bower. Build it with Fonzie.",
   "main": "index.js",
   "directories": {
     "test": "test"
   },
   "dependencies": {
-    "win-fork": "*",
-    "request": "*",
+    "bower": "*",
     "commander": "1.0.5",
     "mkdirp": "0.3.4",
-    "superagent": "*",
-    "batch": "*",
     "debug": "*",
-    "walkdir": "0.0.5"
+    "batch": "*",
+    "async": "*",
+    "underscore": "*",
+    "fs-extra": "~0.6.0"
   },
-  "scripts": {},
+  "devDependencies": {
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-nodeunit": "~0.1.2",
+    "grunt-contrib-watch": "~0.2.0",
+    "grunt": "~0.4.0rc7"
+  },
+  "scripts": {
+    "test": "grunt nodeunit"
+  },
   "repository": {
     "type": "git",
     "url": "http://github.com/anthonyshort/fonzie"
@@ -29,11 +37,13 @@
   "bin": {
     "fonzie": "bin/fonzie",
     "fonzie-init": "bin/fonzie-init",
-    "fonzie-build": "bin/fonzie-build",
-    "fonzie-install": "bin/fonzie-install",
-    "fonzie-search": "bin/fonzie-search",
-    "fonzie-publish": "bin/fonzie-publish"
+    "fonzie-build": "bin/fonzie-build"
   },
   "author": "Anthony Short",
-  "license": "BSD"
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/fonzie/fonzie/blob/master/LICENSE-MIT"
+    }
+  ]
 }

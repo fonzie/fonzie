@@ -1,0 +1,13 @@
+{
+  "name": "test",
+  "version": "0.1.0",
+  "dependencies": {
+    "test": "*"
+  },
+  "fonzie": {
+    "assets": "assets",
+    "require": ["lib/test.rb"],
+    "paths": ["local"],
+    "bundledDependencies": [ "./local/two" ]
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "name": "test-local",
+  "version": "0.1.0",
+  "fonzie": {
+    "assets": {
+      "foo": "./foo",
+      "bar": "./bar"
+    },
+    "require": ["local.rb"]
+  }
+}

@@ -1,19 +1,13 @@
-# Fonzie: The Package Manager for Sass 
+# Fonzie: Modular Sass Development
 
----
+Fonzie is a Sass package builder built on top of Bower. It allows you to easily install Sass packages into your project and then build it easily. It takes care of all the technical bits so you can focus on writing truly modular Sass.
 
-**Everything is currently in testing** while I work out any bugs and make sure everything works the best
-way possible. When Fonzie reaches a stable version the registry will be locked down, until then, **I might
-need to clear the registry** if I need to make any large changes. Please give me feedback and add issues.
-
----
-
-Fonzie is a package manager built on top of Bower-server and Component(1). It allows you to easily install
-Sass packages into your project and then build it. Unlike Component, Fonzie uses a registry but these still
-map to Github projects.
-
-With Fonzie you can **install Sass packages, search for them in a registry and build your project** and all of
-the load paths and file requires are done for you.
+* Install Sass packages from Bower
+* Automatically copy or symlink assets from packages
+* Automatic creation of load paths for all install components
+* Create local packages with your project
+* Automatically require Ruby libraries
+* Allows for complex dependency trees of Sass packages
 
 ## Installation
 
@@ -21,30 +15,39 @@ the load paths and file requires are done for you.
 npm install -g fonzie
 ```
 
-You'll also need to have the Sass gem installed.
+You'll also need to have the Sass gem installed. We could use libsass but it isn't fully-featured just yet, so we wrap the CLI tool.
 
-## Demo
-
-You can grab the [example project](http://github.com/fonzie/example-project) that has Fonzie setup and ready to go. You
-just need to run `fonzie install` and `fonzie build` to see it in action.
+Type `fonzie` to see a list of available commands.
 
 ## Overview
 
-**Fonzie controls your Sass projects.** You build your Sass with it and you install packages. This means you don't
-use tools like Compass or use the Sass gem directly. Instead, you create a `component.json` describing your
-project and using Fonzie to do everything.
+**Fonzie builds your Sass projects.** This means you don't use tools like Compass or use the Sass gem directly. Instead, you create a `bower.json` describing your
+project and use Fonzie to do everything.
 
-Installing packages is easy:
+Every Fonzie-compatible package requires a `bower.json`.
+
+Installing packages is easy, just use Bower:
 
 ```
-fonzie install breakpoints
+bower install fonzie-breakpoints
+```
+
+Or add it to your `bower.json`:
+
+```
+{
+  "name": "my-project",
+  "main": "index.scss",
+  "dependencies": {
+    "fonzie-breakpoints": "*"
+  }
+}
 ```
 
 Then import just what you need in your project:
 
 ```scss
 @import "breakpoints"
-
 @include mobile {
   color: red;
 }
@@ -56,153 +59,146 @@ Then build your Sass:
 fonzie build
 ```
 
-`fonzie-build` is a wrapper around Sass so it will take care of all the load paths. This allows you to require
-the name of the package without needing to worry about where it's located. For example, if you install the `clear-floats`
-package you just need to do
+So, what does this do?
 
-```scss
-@import "clear-floats";
-```
+* It will use the `main` field from your `bower.json` file as the input
+* It will trace the dependency tree and add all components as load paths
+* It finds any local or bundled dependencies and includes them too
+* It will automatically require any Ruby files these dependencies specify
+* It will automatically copy any assets from packages into the build directory
 
-And it will work no matter where you are.
+## Fonzie Package Fields
 
-### Commands
-
-Type `fonzie` to see a list of available commands:
+Fonzie can determine more about the Sass packages by using the `fonzie` field in `bower.json`.
 
 ```
-Usage: fonzie <command> [options]
-
-  Options:
-
-    -h, --help     output usage information
-    -V, --version  output the version number
-
-  Commands:
-
-    install [name ...]      install one or more packages
-    init                    create a package skeleton
-    search [query]          search for packages. No query to see all packages
-    build                   build the package
-    publish                 Add package to the public registry
-
-```
-
-## Getting Started
-
-Fonzie uses the same `component.json` as [component/component](Component) so in theory they are just Component packages. 
-If you haven't used a package manager like Bower or Component before, I'll run you through setting up a `component.json`.
-
-The manifest, `component.json`, lives at the root of your Sass project and describes it. It sets a version, a name, description
-author and most importantly, the dependencies of your project.
-
-You can get started quickly using `fonzie init`:
-
-```
-fonzie init
-```
-
-This will ask you a couple of questions and then create a few files for you, one of them is the `component.json` file. It 
-will look something like this:
-
-```js
 {
   "name": "my-project",
-  "version": "0.1.0",
   "main": "index.scss",
-  "remotes": ["http://fonzie.herokuapp.com/packages"],
-  "files": ["index.scss"],
   "dependencies": {
-
+    "fonzie-breakpoints": "*"
+  },
+  "fonzie": {
+    "require": ["./lib/my-script.rb"]
   }
 }
-
 ```
 
-For a detailed explanation of all of the fields, set the [https://github.com/component/component/wiki/Spec](Component wiki).
-The important parts for us are the `files` and `dependencies` sections. Every file that you need for you component
-to work needs to be in the `files` array otherwise it won't be pulled down when someone installs your package.
+There are a few settings available:
 
-Lets install a package into our project:
+* `require`: Specify and array of file paths to Ruby scripts (relative to the current package) to require
+* `bundledDependencies`: Include dependencies that are packages themselves, but not installed via Bower
+* `paths`: Specify some extra load paths to add
+* `assets`: Tell Fonzie which directories to copy over into the build directory
 
-```
-fonzie install clear-floats
-```
+## Load Paths
 
-This will install the `clear-floats` package into your `components` director and add it as a dependency in your `component.json`.
-
-Now import that into your main file (the main file you would normally build with Sass):
+`fonzie-build` is a wrapper around Sass so it will take care of all the load paths. This allows you to require the name of the package without needing to worry about where it's located. For example, if you install the `fonzie-clear-floats` package you just need to do:
 
 ```scss
 @import "clear-floats";
 ```
 
-And build your project:
+And it will work no matter where you are. Due to the fact Sass doesn't provide any sort of 'index' type of functionality, it is dependent on the package on how you can import it.
 
-```
-fonzie build
-```
+If there are conflicts with names, you can use the longer version:
 
-This will build the file output it into `build/build.css`. You can change this using the `-o` option:
-
-```
-fonzie build -o public/screen.css
+```scss
+@import "fonzie-clear-floats/clear-floats";
 ```
 
-Now you can search for new packages too:
+### Adding more load paths
+
+If for some reason you need to add extra load paths, you can do so using the `paths` field. This is an array off field paths relative to the current package.
 
 ```
-fonzie search prefix
+{
+  "fonzie": {
+    "paths": ["./lib", "./styleguide"]
+  }
+}
 ```
 
-And be shown a list of packages available.
-
-## Publishing Packages
-
-Publishing new packages to the registry is easy. It uses your `component.json` file to publish kind of like npm. Just
-run this in your package directory:
-
-```
-fonzie publish
-```
-
-If you've created your `component.json` using `fonzie init` you shouldn't have any problems. Like Bower, packages can't
-be removed from the registry and can't be edited. I'm looking at various ways to manage this using Github.
-
-
-## Adding Custom Sass Functions
+## Ruby Scripts
 
 You can also require custom Ruby scripts just like you can with the Sass command line tool. This works the same way
-as 
+as
 
 ```
 sass -r /path/to/file.rb
 ```
 
-And allows you to [http://sass-lang.com/docs/yardoc/Sass/Script/Functions.html](write custom Sass functionality). Just
-add a `ruby` section to your `component.json` and add an array of files you want required:
+And allows you to write custom Sass functionality. Just
+add a `ruby` section to your `bower.json` and add an array of files you want required:
 
 ```
 {
-  "name": "component-name",
-  "ruby": ["lib/something.rb"]
+  "fonzie": {
+    require: ["lib/something.rb"]
+  }
 }
 ```
 
-## Local Packages
+## Bundled Dependencies
 
-Like Component, you can also have local packages. These work as if they were installed from the registry, meaning
-that the load paths and ruby files will all be loaded. They are essentially mini-packages that you can make public
-or just use to break up your application.
+Like Component, you can also have local packages. These work as if they were installed from the registry, meaning that the load paths and ruby files will all be loaded. They are essentially mini-packages that you can make public or just use to break up your application.
 
-You'll need to add another load path to your `component.json`
+If you're building everything modular, everything you write, even if it isn't shared via Bower, should be written as a package.
+
+You'll need to add another load path to your `bower.json`
 
 ```js
-{ 
+{
   "name": "foo",
-  "paths": [ "local" ]
+  "fonzie": {
+    "bundledDependencies": [ "local/grid" ]
+  }
 }
 ```
 
-This will allow Fonzie to look in local for any packages as well. Each package will need its own `component.json` file.
+## Assets
 
+Asset handling in front-end packages is tricky. Due to the fact that the paths we write in our Sass
+are relative to whereever the build directory is, it makes it hard to share assets between people.
+
+Fonzie handles assets by **copying or symlinking them from the packages and into the build directory.** The mapping for this is in the `bower.json`.
+
+```js
+{
+  "name": "my-sweet-package",
+  "fonzie": {
+    "assets": "./images"
+  }
+}
+```
+
+This will copy the `/images` directory from that package to the `/build` directory and name the folder `my-sweet-package`. It names it after the package name to help avoid conflicts. However, you can also be a bit more explicit:
+
+```js
+{
+  "name": "my-sweet-package",
+  "fonzie": {
+    "assets": {
+      "my-sweet-images": "./assets/images",
+      "my-sweet-fonts": "./assets/fonts"
+    }
+  }
+}
+```
+
+This will create the following structure in the build directory:
+
+```
+build/
+  my-sweet-images/
+  my-sweet-fonts/
+  build.css
+```
+
+This allows the packages to be written in such a way that they don't depend on Fonzie to be usable. Now in my Sass I can use paths like:
+
+```scss
+.blah {
+  background: url('my-sweet-images/chuck.jpg');
+}
+```

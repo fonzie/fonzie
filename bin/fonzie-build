@@ -1,26 +1,16 @@
 #!/usr/bin/env node
 
 var program = require('commander');
-var fonzie = require('..');
 var Builder = require('../lib/builder');
-var utils = require('../lib/utils');
-var log = utils.log;
-var path = require('path');
-var fs = require('fs');
-var exists = fs.existsSync || path.existsSync;
-var mkdir = require('mkdirp');
-var debug = require('debug')('fonzie:build');
-var exec = require('child_process').exec;
-
-// Options 
+var fs = require('fs-extra');
 
 program
-  .option('-o, --out <dir>', 'output directory defaulting to ./build/build.css', 'build/build.css')
+  .option('-o, --out <dir>', 'output directory defaulting to ./build', 'build')
   .option('-s, --style <type>', 'Output style. Can be nested (default), compact, compressed, or expanded.')
   .option('-l, --line-numbers', 'Emit comments in the generated CSS indicating the corresponding source line.')
   .option('-v, --verbose', 'output verbose build information')
-
-// examples
+  .option('-c, --clean', 'Remove the build directory before building')
+  .option('-d, --dev', 'Build in development mode');
 
 program.on('--help', function(){
   console.log('  Examples:');
@@ -28,66 +18,59 @@ program.on('--help', function(){
   console.log('    # build to ./build');
   console.log('    $ fonzie build');
   console.log();
-  console.log('    # build to ./dist as screen.css');
-  console.log('    $ fonzie build -o dist/screen.css');
+  console.log('    # build to ./dist');
+  console.log('    $ fonzie build -o ./dist');
+  console.log();
+  console.log('    # build in development mode');
+  console.log('    $ fonzie build --dev');
+  console.log();
+  console.log('    # remove build directory and build');
+  console.log('    $ fonzie build --clean');
   console.log();
 });
 
-// parse argv
-
 program.parse(process.argv);
-
-// Load json
-
-var conf = require(path.resolve('component.json'));
-
-// Add component lookup paths
-var lookupPaths = ['components'];
-if(conf.paths) {
-  lookupPaths = lookupPaths.concat(conf.paths);
-}
-
-debug('Look up paths: %s', lookupPaths);
-
-// mkdir -p
-mkdir.sync(path.dirname(program.out));
-console.log();
 
 // Build it
 var builder = new Builder({
-  paths: lookupPaths
+  dir: process.cwd(),
+  output: program.out,
+  style: program.style,
+  lineNumbers: program['line-numbers'],
+  dev: program.dev
 });
 
-// When we've built up all the arguments
-builder.on('end', function(args){  
-  var input = program.args[0] || conf.main || 'index.scss';
-  var output = program.out;
+var buildProject = function() {
+  builder.build()
+    .on('log', function(data, packages){
+      if(program.verbose) {
+        console.log();
+        console.log('\tFound packages:\n\t - ', packages.map(String).join('\n\t - '));
+        console.log();
+        console.log('\tLoad paths:\n\t - ', data.loadPaths.join('\n\t - '));
+        console.log();
+        console.log('\tRuby Libraries:\n\t - ', data.require.join('\n\t - '));
+        console.log();
+        console.log('\tInput:\n\t - ', data.input);
+        console.log();
+        console.log('\tOutput:\n\t - ' + data.output);
+      }
+    })
+    .on('end', function(err){
+      if(err) {
+        console.error(err);
+        process.exit(1);
+      }
+      console.log();
+      console.log('Done without errors.');
+      process.exit();
+    });
+};
 
-  if( program.style ) {
-    args.push(['--style', program.style]);
-  }
-
-  if(program['line-numbers']) {
-    args.push(['--line-numbers']);
-  }
-
-  args.unshift(['sass']);
-  args.push([input]);
-  args.push([output]);
-
-  var command = args.map(function(arg){
-    return arg.join(' ');
-  }).join(' ');
-  
-  debug(command);
-
-  // sass --require eachfile --load-path blah --style nested --force --line-numbers [input] [output]
-  var child = exec(command, function(err, out) {
-    if (err) return utils.error(err);
-    log('Built', output);
-    process.exit();
-  });
-
-});
-
-builder.build();
+// Remove the build directory in dev mode
+if(program.clean) {
+  fs.remove(builder.output, buildProject);
+}
+else {
+  buildProject();
+}
