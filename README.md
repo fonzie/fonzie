@@ -8,6 +8,7 @@ Fonzie is a Sass package builder built on top of Bower. It allows you to easily 
 * Create local packages with your project
 * Automatically require Ruby libraries
 * Allows for complex dependency trees of Sass packages
+* Uses the existing `bower.json` file
 
 ## Installation
 
@@ -19,29 +20,25 @@ You'll also need to have the Sass gem installed. We could use libsass but it isn
 
 Type `fonzie` to see a list of available commands.
 
+## Goals
+
+* Allow people to write and share small Sass components
+* Solve issues surrounding how to write reusable Sass modules
+* Make discovering and building packages easy
+* Allow for packages that don't require Fonzie to be usable
+* Handle assets in an elegant and transparent way
+* Apply the goals of Component(1) to the Sass eco-system
+* Leverage an existing package manager
+* Every piece of Sass should be a package
+
 ## Overview
 
-**Fonzie builds your Sass projects.** This means you don't use tools like Compass or use the Sass gem directly. Instead, you create a `bower.json` describing your
-project and use Fonzie to do everything.
-
-Every Fonzie-compatible package requires a `bower.json`.
+**Fonzie builds your Sass projects.** This means you don't use tools like Compass or use the Sass gem directly. Instead, you create a `bower.json` describing your project and use Fonzie to do everything.
 
 Installing packages is easy, just use Bower:
 
 ```
 bower install fonzie-breakpoints
-```
-
-Or add it to your `bower.json`:
-
-```
-{
-  "name": "my-project",
-  "main": "index.scss",
-  "dependencies": {
-    "fonzie-breakpoints": "*"
-  }
-}
 ```
 
 Then import just what you need in your project:
@@ -67,7 +64,15 @@ So, what does this do?
 * It will automatically require any Ruby files these dependencies specify
 * It will automatically copy any assets from packages into the build directory
 
-## Fonzie Package Fields
+## What is a Sass package?
+
+At a minimum, a Sass package is a folder with a `bower.json` file and a Sass file. This is given a name, a version and an entry point (the main file) inside of the `bower.json` file.
+
+All a package needs to be compatible with Fonzie is a `bower.json` file. It uses this to determine the name of the main entry point for the package.
+
+From there, you can add assets, like images and fonts; extend Sass by including ruby files; and create nested dependencies.
+
+## Fonzie Bower Fields
 
 Fonzie can determine more about the Sass packages by using the `fonzie` field in `bower.json`.
 
@@ -84,7 +89,7 @@ Fonzie can determine more about the Sass packages by using the `fonzie` field in
 }
 ```
 
-There are a few settings available:
+Available fields:
 
 * `require`: Specify and array of file paths to Ruby scripts (relative to the current package) to require
 * `bundledDependencies`: Include dependencies that are packages themselves, but not installed via Bower
@@ -93,21 +98,21 @@ There are a few settings available:
 
 ## Load Paths
 
-`fonzie-build` is a wrapper around Sass so it will take care of all the load paths. This allows you to require the name of the package without needing to worry about where it's located. For example, if you install the `fonzie-clear-floats` package you just need to do:
+One of the main benefits of Fonzie is the automatic adding of load paths. This lets you require packages and files from packages in a clean way, like this:
 
 ```scss
 @import "clear-floats";
 ```
 
-And it will work no matter where you are. Due to the fact Sass doesn't provide any sort of 'index' type of functionality, it is dependent on the package on how you can import it.
+Which could actually map to a file located in `/components/fonzie-clear-floats/clear-floats.scss`. Much nicer, isn't it?
+
+This also allows for packages to require their dependencies without worrying about where it might be installed. This is actually a huge bonus which will become more apparent when you start diving into dependencies.
 
 If there are conflicts with names, you can use the longer version:
 
 ```scss
 @import "fonzie-clear-floats/clear-floats";
 ```
-
-### Adding more load paths
 
 If for some reason you need to add extra load paths, you can do so using the `paths` field. This is an array off field paths relative to the current package.
 
@@ -143,7 +148,7 @@ add a `ruby` section to your `bower.json` and add an array of files you want req
 
 Like Component, you can also have local packages. These work as if they were installed from the registry, meaning that the load paths and ruby files will all be loaded. They are essentially mini-packages that you can make public or just use to break up your application.
 
-If you're building everything modular, everything you write, even if it isn't shared via Bower, should be written as a package.
+If you're building everything modular, everything you write, even if it isn't shared via Bower, should be written as a package. For example, in a project I am working on there are roughly 25 packages installed as dependencies and another 20 or so stored locally within the project. Everything we write is a package, which makes things modular and super easy to maintain.
 
 You'll need to add another load path to your `bower.json`
 
