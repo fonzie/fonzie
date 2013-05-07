@@ -1,6 +1,6 @@
 {
   "name": "fonzie",
-  "version": "0.1.0beta",
+  "version": "0.1.0",
   "description": "Install Sass with Bower. Build it with Fonzie.",
   "main": "index.js",
   "directories": {
